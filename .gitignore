@@ -1,0 +1,7 @@
+.vscode
+.Rhistory
+.ipynb_checkpoints
+*.aux
+*.out
+*.log
+Raport.pdf

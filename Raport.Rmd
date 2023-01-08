@@ -1,0 +1,38 @@
+---
+title: "Sprawozdanie 2"
+author: "Szymon Malec, Michał Wiktorowski"
+output:
+  pdf_document: 
+    extra_dependencies: ["polski", "mathtools", "amsthm", "amssymb", "icomma", "upgreek", "xfrac", "scrextend", "float", "tabularx", "hyperref", "caption", "enumitem"]
+fontsize: 12pt
+---
+
+\renewcommand{\figurename}{Wykres}
+\renewcommand{\tablename}{Tablica}
+\raggedbottom
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRUE, fig.pos = "H")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+```
+
+
+
+
+\section{Wstęp}
+
+\section{Test oparty o przedział Wilsona}
+
+\section{Test oparty o przedział Cloppera-Pearsona}
+
+\section{Test oparty o przedział Jeffreysa}
+
+\section{Porównanie testów}
+
+\section{Podsumowanie}
