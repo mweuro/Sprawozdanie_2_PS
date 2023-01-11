@@ -1,2 +1,5 @@
 # Sprawozdanie_2_PS
- Testowanie hipotez
+Testowanie parametru p dla rozkładu dwumianowego opartego o przedziały:
+- Wilsona
+- Cloppera-Pearsona
+- Jeffreysa
