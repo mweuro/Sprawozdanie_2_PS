@@ -3,13 +3,15 @@ title: "Sprawozdanie 2"
 author: "Szymon Malec, Michał Wiktorowski"
 output:
   pdf_document: 
-    extra_dependencies: ["polski", "mathtools", "amsthm", "amssymb", "icomma", "upgreek", "xfrac", "scrextend", "float", "tabularx", "hyperref", "caption", "enumitem"]
+    number_sections: true
+    extra_dependencies: ["polski", "mathtools", "amsthm", "amssymb", "icomma", "upgreek", "xfrac", "scrextend", "float", "tabularx", "hyperref", "caption", "enumitem", "titlesec"]
 fontsize: 12pt
 ---
 
 \renewcommand{\figurename}{Wykres}
 \renewcommand{\tablename}{Tablica}
 \raggedbottom
+\titlelabel{\thetitle.\quad}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRUE, fig.pos = "H")
