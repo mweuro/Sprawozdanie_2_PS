@@ -28,12 +28,18 @@ library(knitr)
 
 
 \section{Wstęp}
-|        Mamy sobie $S \sim \mathcal{B}(n, p)$ oraz hipotezy
+|      Niniejsza praca poświęcona jest przedstawieniu testów dotyczących rozkładu dwumianowego. Załóżmy poziom istotności $\alpha = 0.05$. Przedstawmy hipotezę którą poddamy analizie:
 \begin{itemize}
-\item $H_0: \ p = p_0$
-\item $H_1: \ p \neq p_0$
+\item $H_0$: $p = 0.5$
+\item $H_1$: $p \neq 0.5$,
 \end{itemize}
-
+gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzimy jej poprawność przy użyciu trzech testów:
+\begin{itemize}
+\item testu opartego o $\textbf{przedział Wilsona}$
+\item testu opartego o $\textbf{przedział Cloppera-Pearsona}$
+\item testu opartego o $\textbf{przedział Jeffreysa}$
+\end{itemize}
+Następnie poddamy każdy z testów analizie - zobaczymy, jak się zachowuje ich moc i na tej podstawie stwierdzimy, który test jest najmocniejszy.
 \section{Test oparty o przedział Wilsona}
 
 |        Do konstrukcji przedziału skorzystamy z faktu, że rozkład dwumianowy można przybliżać rozkładem normalnym. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
