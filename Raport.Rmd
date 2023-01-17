@@ -28,8 +28,40 @@ library(knitr)
 
 
 \section{Wstęp}
+|        Mamy sobie $S \sim \mathcal{B}(n, p)$ oraz hipotezy
+\begin{itemize}
+\item $H_0: \ p = p_0$
+\item $H_1: \ p \neq p_0$
+\end{itemize}
 
 \section{Test oparty o przedział Wilsona}
+
+|        Do konstrukcji przedziału skorzystamy z faktu, że rozkład dwumianowy można przybliżać rozkładem normalnym. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
+$$
+\frac{S - np_0}{\sqrt{np_0(1 - p_0)}} \stackrel{\mathrm{d}}{\approx} Z
+$$
+pod warunkiem, że $H_0$ jest prawdziwa. Korzystając z tego, zapisujemy
+$$
+\mathrm{P}\left( -z < \frac{S - np_0}{\sqrt{np_0(1 - p_0)}} < z \right) \approx 1 - \alpha,
+$$
+gdzie $z$ jest kwantylem rzędu $1 - \frac{\alpha}{2}$ rozkładu $\mathcal{N}(0, 1)$. Podnosząc strony nierówności wewnątrz funkcji prawdopodobieństwa dostajemy
+$$
+\mathrm{P}\left( \frac{(S - np_0)^2}{np_0(1 - p_0)} < z^2 \right) \approx 1 - \alpha,
+$$
+a następnie roziązując ukytą wewnątrz nierówność kwadratową względem $p_0$ otrzymamy
+$$
+\mathrm{P}(p_0 \in W) \approx 1 - \alpha,
+$$
+gdzie
+$$
+W = \left[ \frac{S + \frac{1}{2}z^2}{n + z^2} - \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \ , \ \ \frac{S + \frac{1}{2}z^2}{n + z^2} + \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \right].
+$$
+nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmieniać się w zależności od wartości $S$ i jeśli hipoteza zerowa jest prawdziwa, $p_0$ będzie wpadać do p
+
+
+
+
+
 
 \section{Test oparty o przedział Cloppera-Pearsona}
 
