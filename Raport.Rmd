@@ -28,6 +28,7 @@ library(knitr)
 
 
 \section{Wstęp}
+
 |      Niniejsza praca poświęcona jest przedstawieniu testów dotyczących rozkładu dwumianowego. Załóżmy poziom istotności $\alpha = 0.05$. Przedstawmy hipotezę którą poddamy analizie:
 \begin{itemize}
 \item $H_0$: $p = 0.5$
@@ -40,9 +41,14 @@ gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzim
 \item testu opartego o $\textbf{przedział Jeffreysa}$
 \end{itemize}
 Następnie poddamy każdy z testów analizie - zobaczymy, jak się zachowuje ich moc i na tej podstawie stwierdzimy, który test jest najmocniejszy.
+
+
+
+
+
 \section{Test oparty o przedział Wilsona}
 
-|        Do konstrukcji przedziału skorzystamy z faktu, że rozkład dwumianowy można przybliżać rozkładem normalnym. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
+|        Do konstrukcji przedziału wykorzystamy fakt, że rozkład dwumianowy można przybliżać rozkładem normalnym. Przyjmuje się, że przybliżenie to jest dobre, gdy $np > 5$, $n(1 - p) > 5$ oraz wartość $p$ jest bliskia 0.5. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
 $$
 \frac{S - np_0}{\sqrt{np_0(1 - p_0)}} \stackrel{\mathrm{d}}{\approx} Z
 $$
@@ -50,7 +56,7 @@ pod warunkiem, że $H_0$ jest prawdziwa. Korzystając z tego, zapisujemy
 $$
 \mathrm{P}\left( -z < \frac{S - np_0}{\sqrt{np_0(1 - p_0)}} < z \right) \approx 1 - \alpha,
 $$
-gdzie $z$ jest kwantylem rzędu $1 - \frac{\alpha}{2}$ rozkładu $\mathcal{N}(0, 1)$. Podnosząc strony nierówności wewnątrz funkcji prawdopodobieństwa dostajemy
+gdzie $z$ jest kwantylem rzędu $1 - \frac{\alpha}{2}$ rozkładu $\mathcal{N}(0, 1)$. Podnosząc strony nierówności wewnątrz funkcji prawdopodobieństwa do kwadratu dostajemy
 $$
 \mathrm{P}\left( \frac{(S - np_0)^2}{np_0(1 - p_0)} < z^2 \right) \approx 1 - \alpha,
 $$
@@ -62,7 +68,7 @@ gdzie
 $$
 W = \left[ \frac{S + \frac{1}{2}z^2}{n + z^2} - \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \ , \ \ \frac{S + \frac{1}{2}z^2}{n + z^2} + \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \right].
 $$
-nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmieniać się w zależności od wartości $S$ i jeśli hipoteza zerowa jest prawdziwa, $p_0$ będzie wpadać do p
+nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmieniać się w zależności od wartości $S$ i jeśli hipoteza zerowa jest prawdziwa, $p_0$ będzie wpadać do niego z częstością zbliżoną do $1 - \alpha$.
 
 
 
