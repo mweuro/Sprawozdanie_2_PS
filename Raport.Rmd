@@ -29,18 +29,18 @@ library(knitr)
 
 \section{Wstęp}
 
-|      Niniejsza praca poświęcona jest przedstawieniu testów dotyczących rozkładu dwumianowego. Załóżmy poziom istotności $\alpha = 0.05$. Przedstawmy hipotezę którą poddamy analizie:
+|      Niniejsza praca poświęcona jest przedstawieniu trzech testów dla parametru proporcji (prawdopodobieństwa sukcesu w próbie Bernoulliego) rozkładu dwumianowego. Dla pewnej zmiennej losowej $S \sim \mathcal{B}(n, p)$ rozważmy hipotezy:
 \begin{itemize}
-\item $H_0$: $p = 0.5$
-\item $H_1$: $p \neq 0.5$,
+\item $H_0$: $p = p_0 = 0.5$
+\item $H_1$: $p \neq p_0 = 0.5$,
 \end{itemize}
-gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzimy jej poprawność przy użyciu trzech testów:
+gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzimy ich poprawność przy użyciu trzech testów:
 \begin{itemize}
-\item testu opartego o $\textbf{przedział Wilsona}$
-\item testu opartego o $\textbf{przedział Cloppera-Pearsona}$
-\item testu opartego o $\textbf{przedział Jeffreysa}$
+\item testu opartego o $\textbf{przedział Wilsona}$,
+\item testu opartego o $\textbf{przedział Cloppera-Pearsona}$,
+\item testu opartego o $\textbf{przedział Jeffreysa}$,
 \end{itemize}
-Następnie poddamy każdy z testów analizie - zobaczymy, jak się zachowuje ich moc i na tej podstawie stwierdzimy, który test jest najmocniejszy.
+na poziomie istotności $\alpha = 0.05$. Następnie poddamy każdy z testów analizie - zobaczymy, jak zachowuje się ich moc i na tej podstawie stwierdzimy, który test jest najmocniejszy.
 
 
 
@@ -48,7 +48,7 @@ Następnie poddamy każdy z testów analizie - zobaczymy, jak się zachowuje ich
 
 \section{Test oparty o przedział Wilsona}
 
-|        Do konstrukcji przedziału wykorzystamy fakt, że rozkład dwumianowy można przybliżać rozkładem normalnym. Przyjmuje się, że przybliżenie to jest dobre, gdy $np > 5$, $n(1 - p) > 5$ oraz wartość $p$ jest bliskia 0.5. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
+|       Do konstrukcji przedziału wykorzystamy fakt, że rozkład dwumianowy można przybliżać rozkładem normalnym. Przyjmuje się, że przybliżenie to jest dobre, gdy $np > 5$, $n(1 - p) > 5$ oraz wartość $p$ jest bliskia 0.5. Wartość oczekiwana $S$ to $\mathrm{E}S = np$, a odchylenie standardowe równe jest $\mathrm{Std}(S) = \sqrt{np(1-p)}$, zatem dla pewnej zmiennej losowej $Z \sim \mathcal{N}(0, 1)$ możemy powiedzieć, że
 $$
 \frac{S - np_0}{\sqrt{np_0(1 - p_0)}} \stackrel{\mathrm{d}}{\approx} Z
 $$
@@ -76,6 +76,14 @@ nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmienia
 
 
 \section{Test oparty o przedział Cloppera-Pearsona}
+
+|       Oznaczmy kwantyl rzędu $\gamma$ rozkładu $\mathcal{B}eta(\alpha, \beta)$ jako $b_{\gamma}(\alpha, \beta)$. Przedział Cloppera-Pearsona przedstawia się w postaci
+$$
+\left[ b_{\frac{\alpha}{2}}(S, n - S + 1), b_{1 - \frac{\alpha}{2}}(S + 1, n - S) \right]
+$$
+
+
+
 
 \section{Test oparty o przedział Jeffreysa}
 
