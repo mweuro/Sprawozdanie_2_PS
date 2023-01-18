@@ -29,7 +29,7 @@ library(knitr)
 
 \section{Wstęp}
 
-|      Niniejsza praca poświęcona jest przedstawieniu trzech testów dla parametru proporcji (prawdopodobieństwa sukcesu w próbie Bernoulliego) rozkładu dwumianowego. Dla pewnej zmiennej losowej $S \sim \mathcal{B}(n, p)$ rozważmy hipotezy:
+|       Niniejsza praca poświęcona jest przedstawieniu trzech testów dla parametru proporcji (prawdopodobieństwa sukcesu w próbie Bernoulliego) rozkładu dwumianowego. Dla pewnej realizacji zmiennej losowej $S \sim \mathcal{B}(n, p)$ rozważmy hipotezy:
 \begin{itemize}
 \item $H_0$: $p = p_0 = 0.5$
 \item $H_1$: $p \neq p_0 = 0.5$,
@@ -77,15 +77,27 @@ nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmienia
 
 \section{Test oparty o przedział Cloppera-Pearsona}
 
-|       Oznaczmy kwantyl rzędu $\gamma$ rozkładu $\mathcal{B}eta(\alpha, \beta)$ jako $b_{\gamma}(\alpha, \beta)$. Przedział Cloppera-Pearsona przedstawia się w postaci
+|       Oznaczmy kwantyl rzędu $\gamma$ rozkładu $\mathcal{B}eta(\alpha, \beta)$ jako $b_{\gamma}(\alpha, \beta)$. Dla pewnej realizacji zmiennej $S$, przedział Cloppera-Pearsona przedstawia się w postaci
 $$
-\left[ b_{\frac{\alpha}{2}}(S, n - S + 1), b_{1 - \frac{\alpha}{2}}(S + 1, n - S) \right]
+CP = \left[ b_{\frac{\alpha}{2}}(S, \ n - S + 1), \ \ b_{1 - \frac{\alpha}{2}}(S + 1, \ n - S) \right],
 $$
-
+gdzie
+$$
+\mathrm{P}(p_0 \in CP) \approx 1 - \alpha.
+$$
 
 
 
 \section{Test oparty o przedział Jeffreysa}
+|       Przedział ten definiuje się podobnie jak przedział Cloppera-Pearsona, z tą różnicą że tutaj korzystamy wyłącznie z kwantyli rozkładu $\mathcal{B}(S + 0.5, \ n - S + 0.5)$. Dla pewnej realizacji zmiennej $S$ ma on zatem następującą postać:
+$$
+J = \left[ b_{\frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5), \ \ b_{1 - \frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5) \right],
+$$
+gdzie
+$$
+\mathrm{P}(p_0 \in J) \approx 1 - \alpha.
+$$
+
 
 \section{Porównanie testów}
 
