@@ -83,8 +83,9 @@ CP = \left[ b_{\frac{\alpha}{2}}(S, \ n - S + 1), \ \ b_{1 - \frac{\alpha}{2}}(S
 $$
 gdzie
 $$
-\mathrm{P}(p_0 \in CP) \approx 1 - \alpha.
+\mathrm{P}(p_0 \in CP) \approx 1 - \alpha
 $$
+pod warunkiem prawdziwości hipotezy zerowej.
 
 
 
@@ -95,8 +96,10 @@ J = \left[ b_{\frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5), \ \ b_{1 - \frac{\alpha
 $$
 gdzie
 $$
-\mathrm{P}(p_0 \in J) \approx 1 - \alpha.
+\mathrm{P}(p_0 \in J) \approx 1 - \alpha
 $$
+pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
+
 
 
 \section{Porównanie testów}
