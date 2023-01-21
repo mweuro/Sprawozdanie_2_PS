@@ -103,5 +103,74 @@ pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
 
 
 \section{Porównanie testów}
+|     W powyższych sekcjach przedstawiliśmy trzy różne sposoby na testowanie parametru proporcji $p$ w rozkładzie dwumianowym. Istnieje jednak pytanie - który z tych testów daje nam największą pewność poprawności hipotezy? Odpowiemy na to pytanie analizując wykresy mocy dla każdego z tych testów. Rozważymy trzy różne długości prób Bernoulliego - $n \in \{7, 35, 250\}$. Dla różnych wartości $0 < p < 1$, będziemy testować hipotezę $H_0 : ~ p = 0,5$. Umożliwi nam to przedstawienie wykresu zależności mocy testu od wartości $p$.
+```{r}
+library(dplyr)
+library(ggplot2)
+library(zeallot)
+library(tidyr)
+library(reshape2)
+library(cowplot)
+library(DescTools)
+options(repr.plot.width = 12, repr.plot.height = 8)
+```
 
+```{r}
+
+
+
+
+
+plots <- function(n, p0 = 0.5,
+                  alpha = 0.05,
+                  N = 10000,
+                  ps = seq(0.01, 0.99, 0.01)){
+
+# Wilson
+power1 <- c()
+for (p in ps) {
+    S <- rbinom(N, prob=p, size=n)
+    z <- qnorm(1 - alpha/2)
+    tests <- (S + 1/2 * z^2) / (n + z^2)  -  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4) < p0 & p0 < (S + 1/2 * z^2) / (n + z^2)  +  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4)
+    power1 <- append(power1, 1 - sum(tests) / N)
+}
+
+# Clopper-Pearson
+power2 <- c()
+for (p in ps) {
+    S <- rbinom(N, size=n, prob=p)
+    tests <- pbinom(S, size=n, prob=p0) > alpha/2  &  dbinom(S, size=n, prob=p0) + pbinom(S, size=n, prob=p0, lower.tail=FALSE) > alpha/2
+    power2 <- append(power2, 1 - sum(tests) / N)
+}
+
+# Jeffreys
+power3 <- c()
+for (p in ps) {
+    S <- rbinom(N, prob=p, size=n)
+    tests <- qbeta(alpha/2, S + 0.5, n - S + 0.5) < p0  &  p0 < qbeta(1 - alpha/2, S + 0.5, n - S + 0.5)
+    power3 <- append(power3, 1 - sum(tests) / N)
+}
+
+ggplot() + 
+  geom_line(aes(ps, power1, col="Wilson")) + 
+  geom_line(aes(ps, power2, col="Clopper-Pearson")) +
+  geom_line(aes(ps, power3, col="Jeffreys")) +
+  labs(x = 'p', y = 'Simulated Power')
+}
+```
+
+```{r n7, fig.cap="\\label{fig:n7} Wykres zależności mocy testów od parametru $p$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
+n <- 7
+plots(n)
+```
+
+```{r n35, fig.cap="\\label{fig:n35} Wykres zależności mocy testów od parametru $p$ dla $n = 35$", fig.width = 5, fig.height = 3, fig.align="center"}
+n <- 35
+plots(n)
+```
+
+```{r n250, fig.cap="\\label{fig:n250} Wykres zależności mocy testów od parametru $p$ dla $n = 250$", fig.width = 5, fig.height = 3, fig.align="center"}
+n <- 250
+plots(n)
+```
 \section{Podsumowanie}
