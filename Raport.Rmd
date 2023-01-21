@@ -103,7 +103,7 @@ pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
 
 
 \section{Porównanie testów}
-|     W powyższych sekcjach przedstawiliśmy trzy różne sposoby na testowanie parametru proporcji $p$ w rozkładzie dwumianowym. Istnieje jednak pytanie - który z tych testów daje nam największą pewność poprawności hipotezy? Odpowiemy na to pytanie analizując wykresy mocy dla każdego z tych testów. Rozważymy trzy różne długości prób Bernoulliego - $n \in \{7, 35, 250\}$. Dla różnych wartości $0 < p < 1$, będziemy testować hipotezę $H_0 : ~ p = 0,5$. Umożliwi nam to przedstawienie wykresu zależności mocy testu od wartości $p$.
+|     W powyższych sekcjach przedstawiliśmy trzy różne sposoby na testowanie parametru proporcji $p$ w rozkładzie dwumianowym. Istnieje jednak pytanie - który z tych testów daje nam największą pewność poprawności hipotezy? Odpowiemy na to pytanie analizując wykresy mocy dla każdego z tych testów. Rozważymy trzy różne długości prób Bernoulliego - $n \in \{7, 35, 250\}$. Dla różnych wartości $0 < p < 1$, będziemy testować hipotezę $H_0 : ~ p = 0,5$. Umożliwi nam to przedstawienie wykresu zależności mocy testu od wartości $p$. W tym celu wykonamy $N = 10000$ symulacji Monte Carlo, aby wyznaczyć możliwie najdokładniejsze wartości mocy rozważanych testów.
 ```{r}
 library(dplyr)
 library(ggplot2)
@@ -116,46 +116,40 @@ options(repr.plot.width = 12, repr.plot.height = 8)
 ```
 
 ```{r}
-
-
-
-
-
 plots <- function(n, p0 = 0.5,
                   alpha = 0.05,
+                  z = qnorm(1 - alpha/2),
                   N = 10000,
                   ps = seq(0.01, 0.99, 0.01)){
 
-# Wilson
 power1 <- c()
+power2 <- c()
+power3 <- c()
+
 for (p in ps) {
     S <- rbinom(N, prob=p, size=n)
-    z <- qnorm(1 - alpha/2)
+
     tests <- (S + 1/2 * z^2) / (n + z^2)  -  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4) < p0 & p0 < (S + 1/2 * z^2) / (n + z^2)  +  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4)
     power1 <- append(power1, 1 - sum(tests) / N)
-}
 
-# Clopper-Pearson
-power2 <- c()
-for (p in ps) {
-    S <- rbinom(N, size=n, prob=p)
-    tests <- pbinom(S, size=n, prob=p0) > alpha/2  &  dbinom(S, size=n, prob=p0) + pbinom(S, size=n, prob=p0, lower.tail=FALSE) > alpha/2
+    tests <- qbeta(alpha/2, S, n - S + 1) < p0  &  p0 < qbeta(1 - alpha/2, S + 1, n - S)
     power2 <- append(power2, 1 - sum(tests) / N)
-}
 
-# Jeffreys
-power3 <- c()
-for (p in ps) {
-    S <- rbinom(N, prob=p, size=n)
     tests <- qbeta(alpha/2, S + 0.5, n - S + 0.5) < p0  &  p0 < qbeta(1 - alpha/2, S + 0.5, n - S + 0.5)
     power3 <- append(power3, 1 - sum(tests) / N)
 }
 
 ggplot() + 
-  geom_line(aes(ps, power1, col="Wilson")) + 
-  geom_line(aes(ps, power2, col="Clopper-Pearson")) +
-  geom_line(aes(ps, power3, col="Jeffreys")) +
-  labs(x = 'p', y = 'Simulated Power')
+  geom_line(aes(ps, power1, col="Wilson"), linewidth=0.5, alpha = 0.4) + 
+  geom_line(aes(ps, power2, col="Clopper-Pearson"), linetype="dashed", linewidth=0.7) +
+  geom_line(aes(ps, power3, col="Jeffreys"), linetype="dotted", linewidth=0.8) +
+  labs(x = 'p', y = 'Moc testu') + 
+  scale_color_manual('', 
+      breaks = c('Wilson',
+                 'Clopper-Pearson',
+                 'Jeffreys'
+                 ),
+      values = c('purple', 'lightblue', 'brown'))
 }
 ```
 
@@ -174,6 +168,45 @@ n <- 250
 plots(n)
 ```
 
-Jak się okazuje, wartości mocy są niemal identyczne dla wszystkich trzech testów. Czy oznacza to, że nie istnieje test najmocniejszy? Nie do końca. Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
+|     Jak się okazuje, wartości mocy są identyczne dla wszystkich trzech testów. Czy oznacza to, że nie istnieje test najmocniejszy? Nie do końca. Jest to prawda dla rozważanych przez nas prób o długościach $n \in \{7, 35, 250\}$, jednak dla innych rozmiarów może być inaczej (co pokażemy w dalszej części). Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
 
+```{r}
+intervals <- function(n, S = 0:n, alpha = 0.05){
+  intervals1 <- BinomCI(S, n, method="wilson")
+intervals2 <- BinomCI(S, n, method="clopper-pearson")
+intervals3 <- BinomCI(S, n, method="jeffreys")
+
+ggplot() +
+  geom_point(aes(S, intervals1[,2], col="Wilson"), size = 0.3) + geom_point(aes(S, intervals1[,3], col="Wilson"), size = 0.3) +
+  geom_point(aes(S, intervals2[,2], col="Clopper-Pearson"), size = 0.3) + geom_point(aes(S, intervals2[,3], col="Clopper-Pearson"), size = 0.3) +
+  geom_point(aes(S, intervals3[,2], col="Jeffreys"), size = 0.3) + geom_point(aes(S, intervals3[,3], col="Jeffreys"), size = 0.3) +
+  geom_line(aes(S, 0.5)) +
+  labs(x = 'n', y = 'Confidence intervals') + 
+  scale_color_manual('', 
+      breaks = c('Wilson',
+                 'Clopper-Pearson',
+                 'Jeffreys'
+                 ),
+      values = c('purple', 'lightblue', 'brown'))
+}
+```
+
+```{r conf7, fig.cap="\\label{fig:conf7} Przedziały ufności parametru $p_0$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
+intervals(7)
+```
+
+```{r conf35, fig.cap="\\label{fig:conf35} Przedziały ufności parametru $p_0$ dla $n = 35$", fig.width = 5, fig.height = 3, fig.align="center"}
+intervals(35)
+```
+
+```{r conf250, fig.cap="\\label{fig:conf250} Przedziały ufności parametru $p_0$ dla $n = 250$", fig.width = 5, fig.height = 3, fig.align="center"}
+intervals(250, 108:142)
+```
+
+Na powyższych wykresach wyraźnie widać, że przedział Cloppera-Pearsona jest szerszy od dwóch pozostałych. Dla zbadanych przez nas długości prób, częstotliwość wpadania $p_0$ w przedziały jest identyczna (stąd moce tych testów mają identyczne wartości dla różnych wartości $p$). Co się jednak stanie dla próby Bernoulliego o długości $n = 5$?
+
+```{r conf5, fig.cap="\\label{fig:conf5} Przedziały ufności parametru $p_0$ dla $n = 5$. Wyraźnie widać, że wartość $p_0$ wpada najczęściej w przedział Cloppera-Pearsona", fig.width = 5, fig.height = 3, fig.align="center"}
+intervals(5)
+```
+Możemy zauważyć, że parametr $p_0$ za każdym razem jest zawarty w przedziale Cloppera-Pearsona, podczas gdy dla pozostałych testów nie dzieje się tak dla granicznych wartości $n$. W tym przypadku to właśnie test Cloppera-Pearsona jest najmocniejszy spośród wszystkich, czego nie można było powiedzieć wcześniej.
 \section{Podsumowanie}
