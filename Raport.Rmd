@@ -60,7 +60,7 @@ gdzie $z$ jest kwantylem rzędu $1 - \frac{\alpha}{2}$ rozkładu $\mathcal{N}(0,
 $$
 \mathrm{P}\left( \frac{(S - np_0)^2}{np_0(1 - p_0)} < z^2 \right) \approx 1 - \alpha,
 $$
-a następnie roziązując ukytą wewnątrz nierówność kwadratową względem $p_0$ otrzymamy
+a następnie rozwiązując ukrytą wewnątrz nierówność kwadratową względem $p_0$ otrzymamy
 $$
 \mathrm{P}(p_0 \in W) \approx 1 - \alpha,
 $$
@@ -173,4 +173,7 @@ plots(n)
 n <- 250
 plots(n)
 ```
+
+Jak się okazuje, wartości mocy są niemal identyczne dla wszystkich trzech testów. Czy oznacza to, że nie istnieje test najmocniejszy? Nie do końca. Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
+
 \section{Podsumowanie}
