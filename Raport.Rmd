@@ -18,10 +18,68 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRU
 ```
 
 ```{r}
-library(ggplot2)
 library(dplyr)
+library(ggplot2)
 library(tidyr)
 library(knitr)
+library(DescTools)
+
+
+plots <- function(n, p0 = 0.5,
+                  alpha = 0.05,
+                  z = qnorm(1 - alpha/2),
+                  N = 100,
+                  ps = seq(0.01, 0.99, 0.01)){
+
+    power1 <- c()
+    power2 <- c()
+    power3 <- c()
+
+    for (p in ps) {
+        S <- rbinom(N, prob=p, size=n)
+
+        tests <- (S + 1/2 * z^2) / (n + z^2)  -  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4) < p0 & p0 < (S + 1/2 * z^2) / (n + z^2)  +  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4)
+        power1 <- append(power1, 1 - sum(tests) / N)
+
+        tests <- qbeta(alpha/2, S, n - S + 1) < p0  &  p0 < qbeta(1 - alpha/2, S + 1, n - S)
+        power2 <- append(power2, 1 - sum(tests) / N)
+
+        tests <- qbeta(alpha/2, S + 0.5, n - S + 0.5) < p0  &  p0 < qbeta(1 - alpha/2, S + 0.5, n - S + 0.5)
+        power3 <- append(power3, 1 - sum(tests) / N)
+    }
+
+    ggplot() + 
+      geom_line(aes(ps, power1, col="Wilson"), linewidth=0.5, alpha = 0.4) + 
+      geom_line(aes(ps, power2, col="Clopper-Pearson"), linetype="dashed", linewidth=0.7) +
+      geom_line(aes(ps, power3, col="Jeffreys"), linetype="dotted", linewidth=0.8) +
+      labs(x = 'p', y = 'Moc testu') + 
+      scale_color_manual('', 
+          breaks = c('Wilson',
+                    'Clopper-Pearson',
+                    'Jeffreys'
+                    ),
+          values = c('purple', 'lightblue', 'brown'))
+}
+
+
+intervals <- function(n, S = 0:n, alpha = 0.05){
+    intervals1 <- BinomCI(S, n, method="wilson")
+    intervals2 <- BinomCI(S, n, method="clopper-pearson")
+    intervals3 <- BinomCI(S, n, method="jeffreys")
+
+    ggplot() +
+      geom_point(aes(S, intervals1[,2], col="Wilson"), size = 0.3) + geom_point(aes(S, intervals1[,3], col="Wilson"), size = 0.3) +
+      geom_point(aes(S, intervals2[,2], col="Clopper-Pearson"), size = 0.3) + geom_point(aes(S, intervals2[,3], col="Clopper-Pearson"), size = 0.3) +
+      geom_point(aes(S, intervals3[,2], col="Jeffreys"), size = 0.3) + geom_point(aes(S, intervals3[,3], col="Jeffreys"), size = 0.3) +
+      geom_line(aes(S, 0.5)) +
+      labs(x = 'n', y = 'Confidence intervals') + 
+      scale_color_manual('', 
+          breaks = c('Wilson',
+                    'Clopper-Pearson',
+                    'Jeffreys'
+                    ),
+          values = c('purple', 'lightblue', 'brown'))
+}
 ```
 
 
@@ -40,7 +98,7 @@ gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzim
 \item testu opartego o $\textbf{przedział Cloppera-Pearsona}$,
 \item testu opartego o $\textbf{przedział Jeffreysa}$,
 \end{itemize}
-na poziomie istotności $\alpha = 0.05$. Następnie poddamy każdy z testów analizie - zobaczymy, jak zachowuje się ich moc i na tej podstawie stwierdzimy, który test jest najmocniejszy.
+na poziomie istotności $\alpha = 0.05$. Następnie porównamy wspomniane testy pod kątem mocy, aby odpowiedzić na pytanie, czy można wyłonić wśród nich test jednostajnie najmocniejszy.
 
 
 
@@ -66,7 +124,7 @@ $$
 $$
 gdzie
 $$
-W = \left[ \frac{S + \frac{1}{2}z^2}{n + z^2} - \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \ , \ \ \frac{S + \frac{1}{2}z^2}{n + z^2} + \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \right].
+W = \left[ \frac{S + \frac{1}{2}z^2}{n + z^2} - \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \ , \ \ \frac{S + \frac{1}{2}z^2}{n + z^2} + \frac{z}{n + z^2} \sqrt{\frac{S(n - S)}{n} + \frac{z^2}{4}} \right]
 $$
 nazywamy przedziałem Wilsona. Widzimy zatem, że przedział ten będzie zmieniać się w zależności od wartości $S$ i jeśli hipoteza zerowa jest prawdziwa, $p_0$ będzie wpadać do niego z częstością zbliżoną do $1 - \alpha$.
 
@@ -103,55 +161,13 @@ pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
 
 
 \section{Porównanie testów}
-|     W powyższych sekcjach przedstawiliśmy trzy różne sposoby na testowanie parametru proporcji $p$ w rozkładzie dwumianowym. Istnieje jednak pytanie - który z tych testów daje nam największą pewność poprawności hipotezy? Odpowiemy na to pytanie analizując wykresy mocy dla każdego z tych testów. Rozważymy trzy różne długości prób Bernoulliego - $n \in \{7, 35, 250\}$. Dla różnych wartości $0 < p < 1$, będziemy testować hipotezę $H_0 : ~ p = 0,5$. Umożliwi nam to przedstawienie wykresu zależności mocy testu od wartości $p$. W tym celu wykonamy $N = 10000$ symulacji Monte Carlo, aby wyznaczyć możliwie najdokładniejsze wartości mocy rozważanych testów.
-```{r}
-library(dplyr)
-library(ggplot2)
-library(zeallot)
-library(tidyr)
-library(reshape2)
-library(cowplot)
-library(DescTools)
-options(repr.plot.width = 12, repr.plot.height = 8)
-```
-
-```{r}
-plots <- function(n, p0 = 0.5,
-                  alpha = 0.05,
-                  z = qnorm(1 - alpha/2),
-                  N = 10000,
-                  ps = seq(0.01, 0.99, 0.01)){
-
-power1 <- c()
-power2 <- c()
-power3 <- c()
-
-for (p in ps) {
-    S <- rbinom(N, prob=p, size=n)
-
-    tests <- (S + 1/2 * z^2) / (n + z^2)  -  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4) < p0 & p0 < (S + 1/2 * z^2) / (n + z^2)  +  z / (n + z^2) * sqrt(S * (n - S) / n + z^2 / 4)
-    power1 <- append(power1, 1 - sum(tests) / N)
-
-    tests <- qbeta(alpha/2, S, n - S + 1) < p0  &  p0 < qbeta(1 - alpha/2, S + 1, n - S)
-    power2 <- append(power2, 1 - sum(tests) / N)
-
-    tests <- qbeta(alpha/2, S + 0.5, n - S + 0.5) < p0  &  p0 < qbeta(1 - alpha/2, S + 0.5, n - S + 0.5)
-    power3 <- append(power3, 1 - sum(tests) / N)
-}
-
-ggplot() + 
-  geom_line(aes(ps, power1, col="Wilson"), linewidth=0.5, alpha = 0.4) + 
-  geom_line(aes(ps, power2, col="Clopper-Pearson"), linetype="dashed", linewidth=0.7) +
-  geom_line(aes(ps, power3, col="Jeffreys"), linetype="dotted", linewidth=0.8) +
-  labs(x = 'p', y = 'Moc testu') + 
-  scale_color_manual('', 
-      breaks = c('Wilson',
-                 'Clopper-Pearson',
-                 'Jeffreys'
-                 ),
-      values = c('purple', 'lightblue', 'brown'))
-}
-```
+|     W powyższych sekcjach przedstawione zostały trzy różne sposoby na testowanie parametru $p$ w rozkładzie dwumianowym. Odpowiemy teraz na pytanie, który z nich oferuje największą moc. W tym celu skorzystamy z metody Monte Carlo. Dla kolejnych wartości $p \in (0, 1)$ wykonujemy następujące kroki:
+\begin{enumerate}
+  \item generujemy $N = 10\ 000$ realizacji zmiennej losowej $S \sim \mathcal{B}(n, p)$,
+  \item dla każdego $S$ z próby testujemy hipotezę $H_0 : ~ p = 0.5$ przy pomocy wszystkich trzech testów,
+  \item dla każdego z testów zliczamy ile razy hipoteza zerowa została zaakceptowana i dzielimy tę liczbę przez $N$, co daje nam przybliżoną wartość mocy dla danego $p$.
+\end{enumerate}
+Porównanie mocy wykonamy dla $n \in \{7, 35, 250\}$.
 
 ```{r n7, fig.cap="\\label{fig:n7} Wykres zależności mocy testów od parametru $p$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
 n <- 7
@@ -170,27 +186,6 @@ plots(n)
 
 |     Jak się okazuje, wartości mocy są identyczne dla wszystkich trzech testów. Czy oznacza to, że nie istnieje test najmocniejszy? Nie do końca. Jest to prawda dla rozważanych przez nas prób o długościach $n \in \{7, 35, 250\}$, jednak dla innych rozmiarów może być inaczej (co pokażemy w dalszej części). Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
 
-```{r}
-intervals <- function(n, S = 0:n, alpha = 0.05){
-  intervals1 <- BinomCI(S, n, method="wilson")
-intervals2 <- BinomCI(S, n, method="clopper-pearson")
-intervals3 <- BinomCI(S, n, method="jeffreys")
-
-ggplot() +
-  geom_point(aes(S, intervals1[,2], col="Wilson"), size = 0.3) + geom_point(aes(S, intervals1[,3], col="Wilson"), size = 0.3) +
-  geom_point(aes(S, intervals2[,2], col="Clopper-Pearson"), size = 0.3) + geom_point(aes(S, intervals2[,3], col="Clopper-Pearson"), size = 0.3) +
-  geom_point(aes(S, intervals3[,2], col="Jeffreys"), size = 0.3) + geom_point(aes(S, intervals3[,3], col="Jeffreys"), size = 0.3) +
-  geom_line(aes(S, 0.5)) +
-  labs(x = 'n', y = 'Confidence intervals') + 
-  scale_color_manual('', 
-      breaks = c('Wilson',
-                 'Clopper-Pearson',
-                 'Jeffreys'
-                 ),
-      values = c('purple', 'lightblue', 'brown'))
-}
-```
-
 ```{r conf7, fig.cap="\\label{fig:conf7} Przedziały ufności parametru $p_0$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
 intervals(7)
 ```
@@ -208,5 +203,6 @@ Na powyższych wykresach wyraźnie widać, że przedział Cloppera-Pearsona jest
 ```{r conf5, fig.cap="\\label{fig:conf5} Przedziały ufności parametru $p_0$ dla $n = 5$. Wyraźnie widać, że wartość $p_0$ wpada najczęściej w przedział Cloppera-Pearsona", fig.width = 5, fig.height = 3, fig.align="center"}
 intervals(5)
 ```
+
 Możemy zauważyć, że parametr $p_0$ za każdym razem jest zawarty w przedziale Cloppera-Pearsona, podczas gdy dla pozostałych testów nie dzieje się tak dla granicznych wartości $n$. W tym przypadku to właśnie test Cloppera-Pearsona jest najmocniejszy spośród wszystkich, czego nie można było powiedzieć wcześniej.
 \section{Podsumowanie}
