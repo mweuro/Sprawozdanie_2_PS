@@ -147,7 +147,10 @@ pod warunkiem prawdziwości hipotezy zerowej.
 
 
 
+
+
 \section{Test oparty o przedział Jeffreysa}
+
 |       Przedział ten definiuje się podobnie jak przedział Cloppera-Pearsona, z tą różnicą że tutaj korzystamy wyłącznie z kwantyli rozkładu $\mathcal{B}(S + 0.5, \ n - S + 0.5)$. Dla pewnej realizacji zmiennej $S$ ma on zatem następującą postać:
 $$
 J = \left[ b_{\frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5), \ \ b_{1 - \frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5) \right],
@@ -160,11 +163,14 @@ pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
 
 
 
+
+
 \section{Porównanie testów}
+
 |     W powyższych sekcjach przedstawione zostały trzy różne sposoby na testowanie parametru $p$ w rozkładzie dwumianowym. Odpowiemy teraz na pytanie, który z nich oferuje największą moc. W tym celu skorzystamy z metody Monte Carlo. Dla kolejnych wartości $p \in (0, 1)$ wykonujemy następujące kroki:
 \begin{enumerate}
   \item generujemy $N = 10\ 000$ realizacji zmiennej losowej $S \sim \mathcal{B}(n, p)$,
-  \item dla każdego $S$ z próby testujemy hipotezę $H_0 : ~ p = 0.5$ przy pomocy wszystkich trzech testów,
+  \item dla każdego $S$ z próbki testujemy hipotezę $H_0: p = 0.5$ na poziomie istotności $\alpha = 0.05$, przy pomocy wszystkich trzech testów,
   \item dla każdego z testów zliczamy ile razy hipoteza zerowa została zaakceptowana i dzielimy tę liczbę przez $N$, co daje nam przybliżoną wartość mocy dla danego $p$.
 \end{enumerate}
 Porównanie mocy wykonamy dla $n \in \{7, 35, 250\}$.
@@ -184,11 +190,15 @@ n <- 250
 plots(n)
 ```
 
-|     Jak się okazuje, wartości mocy są identyczne dla wszystkich trzech testów. Czy oznacza to, że nie istnieje test najmocniejszy? Nie do końca. Jest to prawda dla rozważanych przez nas prób o długościach $n \in \{7, 35, 250\}$, jednak dla innych rozmiarów może być inaczej (co pokażemy w dalszej części). Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
+|       Na wykresach 1, 2 i 3 dostrzec można, że krzywe mocy trzech testów dla każdego $n$ wyraźnie się pokrywają. Jak się okazuje, wyliczone wartości mocy są identyczne dla wszystkich trzech testów. Wynik ten, na pierwszy rzut oka, może budzić pewne wątpliwości, jednakże jest on w pełni poprawny. Podstawową przyczyną takich samych wartości mocy jest to, że przeprowadzane testy dotyczą rozkładu dwumianowego, który jest rozkładem dyskretnym. Oznacza to, że zmienna $S \sim \mathcal{B}(n, p)$ przyjmuje ograniczoną liczbę wartości. Przykładowo dla $n = 7$, zmienna $S$ przyjmuje jedynie wartości $0, 1, 2, \dots, 7$. Zatem w tym przypadku mamy 8 możliwych przedziałów.
 
 ```{r conf7, fig.cap="\\label{fig:conf7} Przedziały ufności parametru $p_0$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
 intervals(7)
 ```
+
+Okazuje się, że gdy $S$ przyjmuje wartości od 1 do 6, wszystkie z trzech testowych przedziałów zawierają wartość 0.5, co prowadzić będzie do akceptacji $H_0$. Z kolei dla $S = 0$ i $S = 7$ wartość 0.5 nie wpada do żadnego z przedziałów (wykres 4). Stąd każdy z testów zachowuje się dokładnie tak samo.
+
+Czy oznacza to, że nie istnieje test najmocniejszy? Jest to prawda dla rozważanych przez nas prób o długościach $n \in \{7, 35, 250\}$, jednak dla innych rozmiarów może być inaczej (co pokażemy w dalszej części). Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
 
 ```{r conf35, fig.cap="\\label{fig:conf35} Przedziały ufności parametru $p_0$ dla $n = 35$", fig.width = 5, fig.height = 3, fig.align="center"}
 intervals(35)
@@ -198,11 +208,16 @@ intervals(35)
 intervals(250, 108:142)
 ```
 
-Na powyższych wykresach wyraźnie widać, że przedział Cloppera-Pearsona jest szerszy od dwóch pozostałych. Dla zbadanych przez nas długości prób, częstotliwość wpadania $p_0$ w przedziały jest identyczna (stąd moce tych testów mają identyczne wartości dla różnych wartości $p$). Co się jednak stanie dla próby Bernoulliego o długości $n = 5$?
+Na powyższych wykresach wyraźnie widać, że przedział Cloppera-Pearsona jest szerszy od dwóch pozostałych. Dla zbadanych przez nas długości prób, częstotliwość wpadania $p_0$ w przedziały jest identyczna (stąd moce tych testów mają identyczne wartości dla różnych wartości $p$). Co się jednak stanie dla $n = 5$?
 
 ```{r conf5, fig.cap="\\label{fig:conf5} Przedziały ufności parametru $p_0$ dla $n = 5$. Wyraźnie widać, że wartość $p_0$ wpada najczęściej w przedział Cloppera-Pearsona", fig.width = 5, fig.height = 3, fig.align="center"}
 intervals(5)
 ```
 
 Możemy zauważyć, że parametr $p_0$ za każdym razem jest zawarty w przedziale Cloppera-Pearsona, podczas gdy dla pozostałych testów nie dzieje się tak dla granicznych wartości $n$. W tym przypadku to właśnie test Cloppera-Pearsona jest najmocniejszy spośród wszystkich, czego nie można było powiedzieć wcześniej.
+
+
+
+
+
 \section{Podsumowanie}
