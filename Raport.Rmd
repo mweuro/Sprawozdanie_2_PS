@@ -223,10 +223,10 @@ plots(5)
 
 \section{Podsumowanie}
 
-|      Rozważaliśmy trzy testy dla rozkładu dwumianowego $\mathcal{B}(n, p)$ oparte o różne przedziały ufności:
+|      Rozważaliśmy trzy testy dla parametru $p$ rozkładu dwumianowego $\mathcal{B}(n, p)$ oparte o następujące przedziały:
 \begin{itemize}
-\item Test Wilsona
-\item Test Cloppera-Pearsona
-\item Test Jeffreysa
+\item Przedział Wilsona
+\item Przedział Cloppera-Pearsona
+\item Przedział Jeffreysa
 \end{itemize}
-Aby stwierdzić, który z tych testów jest jednoznacznie najmocniejszy przeprowadziliśmy symulację mocy dla $n = \{7,35,250\}$. Jak się okazało, wszystkie testy były tak samo mocne. Nie oznacza to jednak, że dla innych wartości $n$ jest tak samo - dla $n=5$ przeprowadziliśmy analogiczną symulację. Okazało się, że w tym przypadku można wyłonić test najsłabszy - test Cloppera-Pearsona. 
+Aby stwierdzić, który z tych testów jest jednostajnie najmocniejszy, przeprowadziliśmy symulację mocy dla $n \in \{7,35,250\}$. Jak się okazało, wszystkie testy były tak samo mocne. Nie oznacza to jednak, że dla innych wartości $n$ jest tak samo - dla $n=5$ przeprowadziliśmy analogiczną symulację. Okazało się, że w tym przypadku można wyłonić test najsłabszy - test Cloppera-Pearsona. 
