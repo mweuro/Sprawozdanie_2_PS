@@ -14,7 +14,7 @@ fontsize: 12pt
 \titlelabel{\thetitle.\quad}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRUE, fig.pos = "H")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRUE, fig.pos = "H", dev.args=list(encoding="CP1257.enc"))
 ```
 
 ```{r}
@@ -71,8 +71,8 @@ intervals <- function(n, S = 0:n, alpha = 0.05){
       geom_point(aes(S, intervals1[,2], col="Wilson"), size = 0.3) + geom_point(aes(S, intervals1[,3], col="Wilson"), size = 0.3) +
       geom_point(aes(S, intervals2[,2], col="Clopper-Pearson"), size = 0.3) + geom_point(aes(S, intervals2[,3], col="Clopper-Pearson"), size = 0.3) +
       geom_point(aes(S, intervals3[,2], col="Jeffreys"), size = 0.3) + geom_point(aes(S, intervals3[,3], col="Jeffreys"), size = 0.3) +
-      geom_line(aes(S, 0.5)) +
-      labs(x = 'n', y = 'Confidence intervals') + 
+      geom_line(aes(S, 0.5), col="red", linewidth=0.3) +
+      labs(x = 'S', y = 'Przedział testowy') + 
       scale_color_manual('', 
           breaks = c('Wilson',
                     'Clopper-Pearson',
@@ -167,54 +167,53 @@ pod warunkiem, że hipoteza $H_0$ jest prawdziwa.
 
 \section{Porównanie testów}
 
-|     W powyższych sekcjach przedstawione zostały trzy różne sposoby na testowanie parametru $p$ w rozkładzie dwumianowym. Odpowiemy teraz na pytanie, który z nich oferuje największą moc. W tym celu skorzystamy z metody Monte Carlo. Dla kolejnych wartości $p \in (0, 1)$ wykonujemy następujące kroki:
+|       W powyższych sekcjach przedstawione zostały trzy różne sposoby na testowanie parametru $p$ w rozkładzie dwumianowym. Odpowiemy teraz na pytanie, który z nich oferuje największą moc. W tym celu skorzystamy z metody Monte Carlo. Dla kolejnych wartości $p \in (0, 1)$ wykonujemy następujące kroki:
 \begin{enumerate}
   \item generujemy $N = 10\ 000$ realizacji zmiennej losowej $S \sim \mathcal{B}(n, p)$,
-  \item dla każdego $S$ z próbki testujemy hipotezę $H_0: p = 0.5$ na poziomie istotności $\alpha = 0.05$, przy pomocy wszystkich trzech testów,
+  \item dla każdego $S$ z próbki testujemy hipotezę $H_0: p = p_0 = 0.5$ na poziomie istotności $\alpha = 0.05$, przy pomocy wszystkich trzech testów,
   \item dla każdego z testów zliczamy ile razy hipoteza zerowa została zaakceptowana i dzielimy tę liczbę przez $N$, co daje nam przybliżoną wartość mocy dla danego $p$.
 \end{enumerate}
 Porównanie mocy wykonamy dla $n \in \{7, 35, 250\}$.
 
-```{r n7, fig.cap="\\label{fig:n7} Wykres zależności mocy testów od parametru $p$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
-n <- 7
-plots(n)
+```{r moc7, fig.cap="\\label{fig:moc7} Wykres zależności mocy testów od parametru $p$ dla $n = 7$.", fig.width = 7, fig.height = 4, fig.align="center"}
+plots(7)
 ```
 
-```{r n35, fig.cap="\\label{fig:n35} Wykres zależności mocy testów od parametru $p$ dla $n = 35$", fig.width = 5, fig.height = 3, fig.align="center"}
-n <- 35
-plots(n)
+```{r moc35, fig.cap="\\label{fig:moc35} Wykres zależności mocy testów od parametru $p$ dla $n = 35$.", fig.width = 7, fig.height = 4, fig.align="center"}
+plots(35)
 ```
 
-```{r n250, fig.cap="\\label{fig:n250} Wykres zależności mocy testów od parametru $p$ dla $n = 250$", fig.width = 5, fig.height = 3, fig.align="center"}
-n <- 250
-plots(n)
+```{r moc250, fig.cap="\\label{fig:moc250} Wykres zależności mocy testów od parametru $p$ dla $n = 250$.", fig.width = 7, fig.height = 4, fig.align="center"}
+plots(250)
 ```
 
-|       Na wykresach 1, 2 i 3 dostrzec można, że krzywe mocy trzech testów dla każdego $n$ wyraźnie się pokrywają. Jak się okazuje, wyliczone wartości mocy są identyczne dla wszystkich trzech testów. Wynik ten, na pierwszy rzut oka, może budzić pewne wątpliwości, jednakże jest on w pełni poprawny. Podstawową przyczyną takich samych wartości mocy jest to, że przeprowadzane testy dotyczą rozkładu dwumianowego, który jest rozkładem dyskretnym. Oznacza to, że zmienna $S \sim \mathcal{B}(n, p)$ przyjmuje ograniczoną liczbę wartości. Przykładowo dla $n = 7$, zmienna $S$ przyjmuje jedynie wartości $0, 1, 2, \dots, 7$. Zatem w tym przypadku mamy 8 możliwych przedziałów.
+|       Na wykresach \ref{fig:moc7}, \ref{fig:moc35} i \ref{fig:moc250} dostrzec można, że krzywe mocy testów dla każdego $n$ wyraźnie się pokrywają. Jak się okazuje, wyliczone wartości mocy są identyczne dla wszystkich trzech testów. Wynik ten, na pierwszy rzut oka, może budzić pewne wątpliwości, jednakże jest on w pełni poprawny. Główną przyczyną takich samych wartości mocy jest to, że przeprowadzane testy dotyczą rozkładu dwumianowego, który jest rozkładem dyskretnym. Oznacza to, że zmienna $S \sim \mathcal{B}(n, p)$ przyjmuje ograniczoną liczbę wartości. Przykładowo dla $n = 7$, zmienna $S$ przyjmuje jedynie wartości $0, 1, 2, \dots, 7$. Zatem w tym przypadku mamy 8 możliwych przedziałów.
 
-```{r conf7, fig.cap="\\label{fig:conf7} Przedziały ufności parametru $p_0$ dla $n = 7$", fig.width = 5, fig.height = 3, fig.align="center"}
+```{r conf7, fig.cap="\\label{fig:conf7} Przedziały testowe w zależności od wartości $S$ dla $n = 7$ z wartością $p_0 = 0.5$ oznaczoną czerwoną linią.", fig.width = 7, fig.height = 4, fig.align="center"}
 intervals(7)
 ```
 
-Okazuje się, że gdy $S$ przyjmuje wartości od 1 do 6, wszystkie z trzech testowych przedziałów zawierają wartość 0.5, co prowadzić będzie do akceptacji $H_0$. Z kolei dla $S = 0$ i $S = 7$ wartość 0.5 nie wpada do żadnego z przedziałów (wykres 4). Stąd każdy z testów zachowuje się dokładnie tak samo.
+Okazuje się, że gdy $S$ przyjmuje wartości od 1 do 6, wszystkie z trzech testowych przedziałów zawierają wartość $p_0 = 0.5$, co prowadzić będzie do akceptacji $H_0$. Z kolei dla $S = 0$ i $S = 7$ wartość 0.5 nie wpada do żadnego z przedziałów (wykres \ref{fig:conf7}). Stąd każdy z testów zachowuje się dokładnie tak samo.
 
-Czy oznacza to, że nie istnieje test najmocniejszy? Jest to prawda dla rozważanych przez nas prób o długościach $n \in \{7, 35, 250\}$, jednak dla innych rozmiarów może być inaczej (co pokażemy w dalszej części). Zwróćmy uwagę na fakt, że to są testy oparte o przedziały ufności. Jeśli $H_0$ jest prawdziwa, to interesuje nas, z jaką częstotliwością wartość $p_0$ będzie zawarta w przedziale ufności w trakcie próby Bernoulliego. Innymi słowy, nie interesuje nas jak wąski jest przedział ufności, tylko jak często wpada do niego wartość $p_0$. Spójrzmy na wykresy przedziałów dla rozważanych długości prób ($n \in \{7, 35, 250\}$)
-
-```{r conf35, fig.cap="\\label{fig:conf35} Przedziały ufności parametru $p_0$ dla $n = 35$", fig.width = 5, fig.height = 3, fig.align="center"}
+```{r conf35, fig.cap="\\label{fig:conf35} Przedziały testowe w zależności od wartości $S$ dla $n = 35$ z wartością $p_0 = 0.5$ oznaczoną czerwoną linią.", fig.width = 7, fig.height = 4, fig.align="center"}
 intervals(35)
 ```
 
-```{r conf250, fig.cap="\\label{fig:conf250} Przedziały ufności parametru $p_0$ dla $n = 250$", fig.width = 5, fig.height = 3, fig.align="center"}
+```{r conf250, fig.cap="\\label{fig:conf250} Przedziały testowe w zależności od wartości $S$ dla $n = 250$ z wartością $p_0 = 0.5$ oznaczoną czerwoną linią.", fig.width = 7, fig.height = 4, fig.align="center"}
 intervals(250, 108:142)
 ```
 
-Na powyższych wykresach wyraźnie widać, że przedział Cloppera-Pearsona jest szerszy od dwóch pozostałych. Dla zbadanych przez nas długości prób, częstotliwość wpadania $p_0$ w przedziały jest identyczna (stąd moce tych testów mają identyczne wartości dla różnych wartości $p$). Co się jednak stanie dla $n = 5$?
+|       Na wykresach \ref{fig:conf35} i \ref{fig:conf250} zobaczyć można jak wyglądają przedziały trzech testów w zależności od wartości $S$ w kolejnych dwóch przypadkach, czyli $n = 35$ oraz $n = 250$. Jak się okazuje, mamy do czynienia z tą samą sytuacją. Nie występuje ani jedna wartość $S$, dla której któryś z przedziałów zawierałby 0.5, a któryś nie (taka sytuacja spowodowałaby różnicę w mocy). Zatem dla rozpatrywanych przez nas wartości $n$ oraz $\alpha = 0.05$ nie da się wyłonić testu jednostajnie najmocniejszego, ponieważ wszystkie testy są równe. Nie oznacza to jednak, że jest tak dla każdego $n$ i dowolnego poziomu istotności $\alpha$. Zwiększenie wartości $\alpha$ spowodowałoby zwiększenie długości przedziałów, co mogłoby skutkować tym, że któryś z przedziałów zjadłby 0.5. Na podstawie wykresów możemy wywnioskować, że tym przedziałem byłby ten pochodzący z testu Cloppera-Pearsona, ponieważ jest on największy.
 
-```{r conf5, fig.cap="\\label{fig:conf5} Przedziały ufności parametru $p_0$ dla $n = 5$. Wyraźnie widać, że wartość $p_0$ wpada najczęściej w przedział Cloppera-Pearsona", fig.width = 5, fig.height = 3, fig.align="center"}
+|       Rozpatrzmy jeszcze przypadek $n = 5$. Na wykresie \ref{fig:conf5} dostrzec można coś ciekawego. Mianowicie przedział Cloppera-Pearsona dla każdego $S$ zawiera $p_0$, czego nie można powiedzieć o dwóch pozostałych przedziałach. Takie zachowanie będzie prowadziło do sytuacji, w której niezależnie jaką wartość przyjmie $S$, test Cloppera-Pearsona będzie akceptował fałszywą hipotezę zerową, skutkiem czego test ten będzie miał moc równą zero dla każdego $p \in (0, 1)$, co zobaczyć możemy na wykresie \ref{fig:moc5}.
+
+```{r conf5, fig.cap="\\label{fig:conf5} Przedziały testowe w zależności od wartości $S$ dla $n = 5$ z wartością $p_0 = 0.5$ oznaczoną czerwoną linią.", fig.width = 7, fig.height = 4, fig.align="center"}
 intervals(5)
 ```
 
-Możemy zauważyć, że parametr $p_0$ za każdym razem jest zawarty w przedziale Cloppera-Pearsona, podczas gdy dla pozostałych testów nie dzieje się tak dla granicznych wartości $n$. W tym przypadku to właśnie test Cloppera-Pearsona jest najmocniejszy spośród wszystkich, czego nie można było powiedzieć wcześniej.
+```{r moc5, fig.cap="\\label{fig:moc5} Wykres zależności mocy testów od parametru $p$ dla $n = 5$.", fig.width = 7, fig.height = 4, fig.align="center"}
+plots(5)
+```
 
 
 
