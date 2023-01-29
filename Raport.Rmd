@@ -205,7 +205,7 @@ intervals(35)
 intervals(250, 108:142)
 ```
 
-|       Na wykresach \ref{fig:conf35} i \ref{fig:conf250} zobaczyć można jak wyglądają przedziały trzech testów w zależności od wartości $S$ w kolejnych dwóch przypadkach, czyli $n = 35$ oraz $n = 250$. Jak się okazuje, mamy do czynienia z tą samą sytuacją. Nie występuje ani jedna wartość $S$, dla której któryś z przedziałów zawierałby 0.5, a któryś nie (taka sytuacja spowodowałaby różnicę w mocy). Zatem dla rozpatrywanych przez nas wartości $n$ oraz $\alpha = 0.05$ nie da się wyłonić testu jednostajnie najmocniejszego, ponieważ wszystkie testy są równe. Nie oznacza to jednak, że jest tak dla każdego $n$ i dowolnego poziomu istotności $\alpha$. Zwiększenie wartości $\alpha$ spowodowałoby zwiększenie długości przedziałów, co mogłoby skutkować tym, że któryś z przedziałów zjadłby 0.5. Na podstawie wykresów możemy wywnioskować, że tym przedziałem byłby ten pochodzący z testu Cloppera-Pearsona, ponieważ jest on największy.
+|       Na wykresach \ref{fig:conf35} i \ref{fig:conf250} zobaczyć można jak wyglądają przedziały trzech testów w zależności od wartości $S$ w kolejnych dwóch przypadkach, czyli $n = 35$ oraz $n = 250$. Jak się okazuje, mamy do czynienia z tą samą sytuacją. Nie występuje ani jedna wartość $S$, dla której któryś z przedziałów zawierałby 0.5, a któryś nie (taka sytuacja spowodowałaby różnicę w mocy). Zatem dla rozpatrywanych przez nas wartości $n$ oraz $\alpha = 0.05$ nie da się wyłonić testu jednostajnie najmocniejszego, ponieważ wszystkie testy są równe. Nie oznacza to jednak, że jest tak dla każdego $n$ i dowolnego poziomu istotności $\alpha$. Zwiększenie wartości $\alpha$ spowodowałoby zwiększenie długości przedziałów, co mogłoby skutkować tym, że któryś z przedziałów "zjadłby" 0.5. Na podstawie wykresów możemy wywnioskować, że tym przedziałem byłby ten pochodzący z testu Cloppera-Pearsona, ponieważ jest on największy.
 
 |       Rozpatrzmy jeszcze przypadek $n = 5$. Na wykresie \ref{fig:conf5} dostrzec można coś ciekawego. Mianowicie przedział Cloppera-Pearsona dla każdego $S$ zawiera $p_0$, czego nie można powiedzieć o dwóch pozostałych przedziałach. Takie zachowanie będzie prowadziło do sytuacji, w której niezależnie jaką wartość przyjmie $S$, test Cloppera-Pearsona będzie akceptował fałszywą hipotezę zerową (czyli będzie popełniał błąd II rodzaju), skutkiem czego test ten będzie miał moc równą zero dla każdego $p \in (0, 1)$, co zobaczyć możemy na wykresie \ref{fig:moc5}.
 
@@ -222,3 +222,11 @@ plots(5)
 
 
 \section{Podsumowanie}
+
+|      Rozważaliśmy trzy testy dla rozkładu dwumianowego $\mathcal{B}(n, p)$ oparte o różne przedziały ufności:
+\begin{itemize}
+\item Test Wilsona
+\item Test Cloppera-Pearsona
+\item Test Jeffreysa
+\end{itemize}
+Aby stwierdzić, który z tych testów jest jednoznacznie najmocniejszy przeprowadziliśmy symulację mocy dla $n = \{7,35,250\}$. Jak się okazało, wszystkie testy były tak samo mocne. Nie oznacza to jednak, że dla innych wartości $n$ jest tak samo - dla $n=5$ przeprowadziliśmy analogiczną symulację. Okazało się, że w tym przypadku można wyłonić test najsłabszy - test Cloppera-Pearsona. 
