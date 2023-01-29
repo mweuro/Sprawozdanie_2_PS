@@ -98,7 +98,7 @@ gdzie $H_0$ i $H_1$ są odpowiednio hipotezą zerową i alternatywną. Sprawdzim
 \item testu opartego o $\textbf{przedział Cloppera-Pearsona}$,
 \item testu opartego o $\textbf{przedział Jeffreysa}$,
 \end{itemize}
-na poziomie istotności $\alpha = 0.05$. Następnie porównamy wspomniane testy pod kątem mocy, aby odpowiedzić na pytanie, czy można wyłonić wśród nich test jednostajnie najmocniejszy.
+na poziomie istotności $\alpha = 0.05$. Następnie porównamy wspomniane testy pod kątem mocy, aby odpowiedzieć na pytanie, czy można wyłonić wśród nich test jednostajnie najmocniejszy.
 
 
 
