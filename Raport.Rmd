@@ -1,5 +1,5 @@
 ---
-title: "Sprawozdanie 2"
+title: "Porównanie testów dla parametru proporcji w rozkładzie dwumianowym"
 author: "Szymon Malec, Michał Wiktorowski"
 output:
   pdf_document: 
@@ -151,7 +151,7 @@ pod warunkiem prawdziwości hipotezy zerowej.
 
 \section{Test oparty o przedział Jeffreysa}
 
-|       Przedział ten definiuje się podobnie jak przedział Cloppera-Pearsona, z tą różnicą że tutaj korzystamy wyłącznie z kwantyli rozkładu $\mathcal{B}(S + 0.5, \ n - S + 0.5)$. Dla pewnej realizacji zmiennej $S$ ma on zatem następującą postać:
+|       Przedział ten definiuje się podobnie jak przedział Cloppera-Pearsona, z tą różnicą, że tutaj korzystamy wyłącznie z kwantyli rozkładu $\mathcal{B}(S + 0.5, \ n - S + 0.5)$. Dla pewnej realizacji zmiennej $S$ ma on zatem następującą postać:
 $$
 J = \left[ b_{\frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5), \ \ b_{1 - \frac{\alpha}{2}}(S + 0.5, \ n - S + 0.5) \right],
 $$
